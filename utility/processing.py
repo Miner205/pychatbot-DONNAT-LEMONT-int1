@@ -1,9 +1,22 @@
-import unicodedata
 
-# description :
+"""
+# Python project : My first chatBot.
+
+# pythonProject-pychatbot-DONNAT-LEMONT-int1
+# Teammates : DONNAT Arthur, LEMONT Mathis ; On (Discord and) Github.
+
+
+# role of this file :
+# processing.py :              .
+"""
+
+import unicodedata
 
 
 def question_to_list(question):
+    """role : ,
+    In, parameters : ,
+    Out, returned result : ."""
     question = question.split(" ")
     i = 0
 

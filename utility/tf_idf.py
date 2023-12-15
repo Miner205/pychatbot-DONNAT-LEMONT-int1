@@ -1,12 +1,26 @@
+
+"""
+# Python project : My first chatBot.
+
+# pythonProject-pychatbot-DONNAT-LEMONT-int1
+# Teammates : DONNAT Arthur, LEMONT Mathis ; On (Discord and) Github.
+
+
+# role of this file :
+# tf_idf.py : tf_idf matrix functions.
+"""
+
 import math
 from data import *
 # import os
 # import numpy as np
 
-# tf_idf matrix functions
-
 
 def term_frequency(chaine:str)->dict:
+    """role : ,
+    In, parameters : ,
+    Out, returned result : ."""
+
     """
     fonction qui calcule la frequence d'apparition de chaque caractere dans une chaine de caracteres
 
@@ -28,6 +42,10 @@ def term_frequency(chaine:str)->dict:
 
 
 def inverse_document_frequency(directory: str) -> dict:
+    """role : ,
+    In, parameters : ,
+    Out, returned result : ."""
+
     """
     ecrire une fonction qui prend en parametre le repertoire ou se trouve l’ensemble des fichiers du corpus et qui retourne un dictionnaire associant a chaque mot son score IDF.
 
@@ -55,6 +73,10 @@ def inverse_document_frequency(directory: str) -> dict:
 
 
 def tf_idf_matrix(directory: str) -> list:
+    """role : ,
+    In, parameters : ,
+    Out, returned result : ."""
+
     """
     ecrire une fonction qui prend en parametre le repertoire ou se trouve l’ensemble des fichiers du corpus et qui retourne une liste de listes representant la matrice TF-IDF.
 
@@ -89,6 +111,10 @@ def tf_idf_matrix(directory: str) -> list:
 
 
 def analyse_tf_idf(tf_idf_dict, option):
+    """role : ,
+    In, parameters : ,
+    Out, returned result : ."""
+
     """
     implemented features.
     In : -tf_idf_dict : ...  ; -option : number (1 to 6) of a feature to run.

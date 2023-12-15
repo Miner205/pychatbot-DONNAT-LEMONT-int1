@@ -1,10 +1,13 @@
+
 # pychatbot-DONNAT-LEMONT-int1
 
-# Description du projet
-Projet Python L1
-Pychatbot
 
-Github : https://github.com/Miner205/pychatbot-DONNAT-LEMONT-int1/tree/main
+# Project description,
+Projet Python L1 Pychatbot.
+
+Python project : My first chatBot.
+
+GitHub : https://github.com/Miner205/pychatbot-DONNAT-LEMONT-int1.git
 
 # Names of project team members,
 

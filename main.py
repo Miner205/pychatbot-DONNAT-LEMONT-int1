@@ -1,18 +1,29 @@
+
+"""
+# Python project : My first chatBot.
+
+# pythonProject-pychatbot-DONNAT-LEMONT-int1
+# Teammates : DONNAT Arthur, LEMONT Mathis ; On (Discord and) GitHub.
+
+
+# role of this file :
+# main.py : for run the project.
+"""
+
 import utility.data as data
 import utility.tf_idf as tf_idf
 import utility.processing as process
 
 from time import sleep
 
-# pythonProject-pychatbot-DONNAT-LEMONT-int1
-# Teammates : DONNAT Arthur, LEMONT Mathis ; On Discord and Github.
-
-# main : for/to run
-
 print(process.question_to_list("a"))
 
 
 def menu():
+    """role : ,
+    In, parameters : ,
+    Out, returned result : ."""
+
     """affiche le menu de toutes les features / actions possibles.
     display with format"""
     print("Choose a feature between : ")
@@ -31,7 +42,7 @@ def menu():
         x = int(input("Enter the number of the chosen feature : "))
         if x != 0:
             tf_idf.analyse_tf_idf(tf_idf_dict, x)
-        sleep(5)
+        # sleep(5)
 
 
 if __name__ == '__main__':
