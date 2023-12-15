@@ -1,9 +1,11 @@
 import unicodedata
 
+# description :
+
+
 def question_to_list(question):
     question = question.split(" ")
     i = 0
-    
 
     while i < len(question):
         question[i] = question[i].lower()
@@ -18,11 +20,8 @@ def question_to_list(question):
         question[i] = cleaned_string
 
         i += 1
-    
 
     if question[-1] == '':
         del question[-1]
 
-
     return question
-        

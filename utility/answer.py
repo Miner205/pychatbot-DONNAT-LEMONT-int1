@@ -1,6 +1,7 @@
 import utility.data as data
 
-# Functions for generate an answer to a question of the user.
+# functions for generate an answer to a question of the user.
+
 
 def generate(vector, relevant_doc):
     """In : vector is the tf-idf vector of the question ;
