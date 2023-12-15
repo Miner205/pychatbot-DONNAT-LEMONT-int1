@@ -1,0 +1,12 @@
+
+What should be write in the "The .pdf report" ?
+
+~4parts :
+
+1-Introdutcion (c'est quoi le projet)
+
+2-Design (How we design mains features)
+
+3-Difficulties (encountered)
+
+4-Conclusion (ce que ça nous à appris ; qu'est ce qu'on ameliorer ; ce q'uon a pas réussi)
