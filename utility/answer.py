@@ -3,15 +3,15 @@
 # Python project : My first chatBot.
 
 # pythonProject-pychatbot-DONNAT-LEMONT-int1
-# Teammates : DONNAT Arthur, LEMONT Mathis ; On (Discord and) Github.
+# Teammates : DONNAT Arthur, LEMONT Mathis ; On (Discord and) GitHub.
 
 
 # role of this file :
 # answer.py : functions for generate an answer to a question of the user.
 """
 
-import data
-import tf_idf
+import utility.data as data
+import utility.tf_idf as tf_idf
 
 
 def generate(vector, relevant_doc):

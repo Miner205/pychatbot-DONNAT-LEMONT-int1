@@ -3,7 +3,7 @@
 # Python project : My first chatBot.
 
 # pythonProject-pychatbot-DONNAT-LEMONT-int1
-# Teammates : DONNAT Arthur, LEMONT Mathis ; On (Discord and) Github.
+# Teammates : DONNAT Arthur, LEMONT Mathis ; On (Discord and) GitHub.
 
 
 # role of this file :
@@ -11,8 +11,8 @@
 """
 
 import math
-from data import *
-# import os
+import utility.data as data
+import os
 # import numpy as np
 
 
@@ -149,12 +149,12 @@ def analyse_tf_idf(tf_idf_dict, option):
 
     elif option == 4:
         # 4. Indiquer le(s) nom(s) du (des) president(s) qui a (ont) parle de la « Nation » et celui qui l’a repete le plus de fois
-        presidents_mentioned_nation = [get_president_name(document) for document in tf_idf_dict if 'Nation' in tf_idf_dict[document]]
+        presidents_mentioned_nation = [data.get_president_name(document) for document in tf_idf_dict if 'Nation' in tf_idf_dict[document]]
         print("Presidents qui ont parle de la Nation : ", presidents_mentioned_nation)
 
     elif option == 5:
         # 5. Indiquer le premier president a parler du climat et/ou de l’ecologie
-        first_president_to_mention_climate = next((get_president_name(document) for document in tf_idf_dict if 'climat' in tf_idf_dict[document] or 'écologie' in tf_idf_dict[document]), None)
+        first_president_to_mention_climate = next((data.get_president_name(document) for document in tf_idf_dict if 'climat' in tf_idf_dict[document] or 'écologie' in tf_idf_dict[document]), None)
         print("Premier president a parler du climat ou de l'ecologie : ", first_president_to_mention_climate)
 
     elif option == 6:

@@ -3,7 +3,7 @@
 # Python project : My first chatBot.
 
 # pythonProject-pychatbot-DONNAT-LEMONT-int1
-# Teammates : DONNAT Arthur, LEMONT Mathis ; On (Discord and) Github.
+# Teammates : DONNAT Arthur, LEMONT Mathis ; On (Discord and) GitHub.
 
 
 # role of this file :
@@ -24,9 +24,6 @@ def list_of_files(directory, extension):
     return files_names
 
 
-files = list_of_files('speeches/', '.txt')
-
-
 def get_president_name(file):
     """role : ,
     In, parameters : ,
@@ -39,7 +36,8 @@ def get_president_name(file):
     return name
 
 
-president_surname = { 'Chirac': "Jacques", "Giscard d'Estaing": "Valérie", 'Hollande': "François", "Macron": "Emmanuel", "Mitterand": "François", "Sarkozy": "Nicolas" }
+president_surname = {'Chirac': "Jacques", "Giscard d'Estaing": "Valérie", 'Hollande': "François", "Macron": "Emmanuel",
+                     "Mitterand": "François", "Sarkozy": "Nicolas"}
 
 
 def get_president_surname(name):
@@ -54,8 +52,9 @@ def print_president_list():
     In, parameters : ,
     Out, returned result : ."""
     last = ""
-    for i in files:
-        txt = get_president_name(i)
+    files_names = list_of_files("./speeches", "txt")
+    for file_name in files_names:
+        txt = get_president_name(file_name)
         if txt != last:
             print(txt)
             last = txt
@@ -97,14 +96,73 @@ def is_letter(character):
         return False
 
 
-def cleaned_file():
-    """role : ,
-    In, parameters : ,
-    Out, returned result : ."""
-    for i in files:
-        f = open(f"speeches/{i}", 'r', encoding='utf-8')
-        lower = f.read().lower()
+def remove_accents(string):
+    """role : remove all accents of a string,
+        In, parameters : a string,
+        Out, returned result : the new modified string."""
+    accents = {'ç': 'c', 'é': 'e', 'è': 'e', 'ê': 'e', 'à': 'a', 'â': 'a', 'ù': 'u', 'û': 'u', 'î': 'i', 'ï': 'i',
+               'ô': 'o', 'ö': 'o', 'œ': 'oe', 'É': 'E', 'È': 'E', 'Ê': 'E', 'À': 'A', 'Â': 'A', 'Ù': 'U', 'Û': 'U',
+               'Î': 'I', 'Ï': 'I', 'Ô': 'O', 'Ö': 'O', 'Œ': 'OE'}
+    new_string = ""
+    for character in string:
+        if character in accents:
+            new_string += accents[character]
+        else:
+            new_string += character
+    return new_string
 
-        writed = open(f"cleaned/{i}", 'w', encoding='utf-8')
-        encoded = lower.encode('ascii', 'ignore')
-        writed.write(encoded.decode())
+
+def remove_punctuations(string):
+    """role : remove all punctuations of a string,
+            In, parameters : a string,
+            Out, returned result : the new modified string."""
+    """For each file stored in the "cleaned" directory, run through its text
+    and remove any punctuation characters. The final result should be a file with words
+    separated by spaces. Please note that some characters, such as the apostrophe (')
+    or the dash (-), requires special treatment to avoid concatenating two words
+    (e.g. "elle-même" should become "elle même" and not "ellemême").
+    Changes made at this phase should be stored in the same files in the "cleaned" directory"""
+    new_string = ""
+    for character in string:
+        if character == "-" or character == "'":
+            new_string += " "
+        elif character == "." or character == "," or character == ";" or character == "!" or character == "?" or character == ":":
+            new_string += ""
+        else:
+            new_string += character
+    return new_string
+
+
+def remove_mutlispaces(string):
+    """role : Remove les espaces superflues.
+        In, parameters : a string,
+        Out, returned result : the new modified string."""
+    new_string = ""
+    precedent_character_was_a_space = False
+    for character in string:
+        if character == " " and precedent_character_was_a_space:
+            new_string += ""
+        elif character == " " and not precedent_character_was_a_space:
+            new_string += character
+            precedent_character_was_a_space = True
+        else:
+            precedent_character_was_a_space = False
+            new_string += character
+    return new_string
+
+
+def cleaned_file(repertoire="./speeches/"):
+    """role : Cette fonction nettoie les fichiers du répertoire repertoire (default : "./speeches/")
+    et les écrit dans le répertoire cleaned.,
+    In, parameters : repertoire des fichiers à nettoyer,
+    Out, returned result : no returned result. la fct met les fichiers nettoyer dans le répertoire cleaned."""
+    files_names = list_of_files(repertoire, "txt")
+    for file_name in files_names:
+        with open(repertoire + file_name, 'r', encoding='utf-8') as f1, open("./cleaned/" + file_name[:-4] + '_cleaned.txt', 'w', encoding='utf-8') as f2:
+            for line in f1:
+                new_line = remove_punctuations(line)  # Remove all punctuations
+                new_line = remove_accents(new_line)   # Remove all accents.
+                new_line = uppercase_to_lowercase(new_line)   # Convert the texts to lower case
+                new_line = remove_mutlispaces(new_line)   # Remove les espaces superflues.
+
+                f2.write(new_line)
