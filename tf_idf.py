@@ -8,39 +8,30 @@
 # role of this file :
 # data.py : functions for process the date / .txt files.
 """
+import math
+import os
 
-def calculate_term_frequency(input_string: str) -> dict:
+def term_frequency(chaine: str) -> dict:
     """
     Computes the frequency of each character in the given string.
 
     Parameters:
-    - input_string (str): The input string to analyze.
+    - chaine (str): The input string to analyze.
 
     Returns:
     - frequency (dict): A dictionary associating each character with its frequency of occurrence.
     """
     frequency = {}
-    for i in range(len(input_string)):
-        if input_string[i] not in frequency:
-            frequency[input_string[i]] = 1
+    for i in range(len(chaine)):
+        if chaine[i] not in frequency:
+            frequency[chaine[i]] = 1
         else:
-            frequency[input_string[i]] += 1
+            frequency[chaine[i]] += 1
 
     frequency = dict(sorted(frequency.items(), key=lambda item: item[0]))
     return frequency
 
-
-def calculate_words_and_unique_words(directory_path):
-    """
-    Reads text files in the specified directory and returns a list of lists of words in each file and a list of unique words.
-
-    Parameters:
-    - directory_path (str): The path to the directory containing text files.
-
-    Returns:
-    - files_words_list (list): A list of lists of words in each file.
-    - unique_words (list): A list of unique words across all files.
-    """
+def words_and_unique_words_in_directory(directory_path):
     files_words_list = []
     unique_words = []
 
@@ -62,18 +53,7 @@ def calculate_words_and_unique_words(directory_path):
 
     return files_words_list, unique_words
 
-
-def calculate_inverse_document_frequency(files_words_list, unique_words):
-    """
-    Computes the inverse document frequency for each unique word.
-
-    Parameters:
-    - files_words_list (list): A list of lists of words in each file.
-    - unique_words (list): A list of unique words across all files.
-
-    Returns:
-    - word_counts (dict): A dictionary associating each unique word with its inverse document frequency.
-    """
+def inverse_document_frequency(files_words_list, unique_words):
     word_counts = {}
     for i in range(len(unique_words)):
         files_with_word = 0
@@ -81,25 +61,15 @@ def calculate_inverse_document_frequency(files_words_list, unique_words):
             for k in range(len(files_words_list[j])):
                 if unique_words[i] == files_words_list[j][k]:
                     files_with_word += 1
-                break
+                    break  # Fixed: Move break inside the loop
         word_counts[unique_words[i]] = math.log10(len(files_words_list) / files_with_word)
 
     word_counts = dict(sorted(word_counts.items(), key=lambda item: item[0]))
     return word_counts
 
-
 def calculate_tf_idf_matrix(directory_path):
-    """
-    Computes the TF-IDF matrix for a collection of documents in the specified directory.
-
-    Parameters:
-    - directory_path (str): The path to the directory containing text files.
-
-    Returns:
-    - tf_idf_matrix (list): The TF-IDF matrix for the documents in the directory.
-    """
-    files_words_list, unique_words = calculate_words_and_unique_words(directory_path)
-    idf_values = calculate_inverse_document_frequency(files_words_list, unique_words)
+    files_words_list, unique_words = words_and_unique_words_in_directory(directory_path)
+    idf_values = inverse_document_frequency(files_words_list, unique_words)
     tf_idf_matrix = []
 
     for i in range(len(files_words_list)):
@@ -114,33 +84,22 @@ def calculate_tf_idf_matrix(directory_path):
 
     return tf_idf_matrix
 
-
-def analyze_tf_idf(tf_idf_dict, option):
-    """
-    Executes implemented features based on the provided option.
-
-    Parameters:
-    - tf_idf_dict (dict): The TF-IDF dictionary.
-    - option (str or int): The number (1 to 6) corresponding to the feature to run.
-    """
+def analyse_tf_idf(tf_idf_dict, option):
     if option == 'all':
         _, tf_idf_dict = calculate_tf_idf_matrix("./cleaned")
-        analyze_tf_idf(tf_idf_dict, 1)
-        analyze_tf_idf(tf_idf_dict, 2)
-        analyze_tf_idf(tf_idf_dict, 3)
-        analyze_tf_idf(tf_idf_dict, 4)
-        analyze_tf_idf(tf_idf_dict, 5)
-        analyze_tf_idf(tf_idf_dict, 6)
+        analyse_tf_idf(tf_idf_dict, 1)
+        analyse_tf_idf(tf_idf_dict, 2)
+        analyse_tf_idf(tf_idf_dict, 3)
+        analyse_tf_idf(tf_idf_dict, 4)
+        analyse_tf_idf(tf_idf_dict, 5)
+        analyse_tf_idf(tf_idf_dict, 6)
 
     if option == 1:
-        # Feature 1: Display the list of least important words in the document corpus.
         least_important_words = [word for document in tf_idf_dict for word, tf_idf_score in tf_idf_dict[document].items() if tf_idf_score < 0]
-        # Remove duplicates
         least_important_words = list(dict.fromkeys(least_important_words))
         print("Least important words: ", least_important_words)
 
     elif option == 2:
-        # Feature 2: Display the word(s) with the highest TF-IDF score.
         highest_tf_idf_score = max(tf_idf_score for document in tf_idf_dict for tf_idf_score in tf_idf_dict[document].values())
         highest_tf_idf_words = [word for document in tf_idf_dict for word, tf_idf_score in tf_idf_dict[document].items() if tf_idf_score == highest_tf_idf_score]
         print("Words with the highest TF-IDF score: ", highest_tf_idf_words)
