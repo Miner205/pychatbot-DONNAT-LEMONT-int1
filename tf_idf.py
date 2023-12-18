@@ -73,12 +73,52 @@ def calculate_tf_idf_matrix(directory_path):
     tf_idf_matrix = []
 
     for i in range(len(files_words_list)):
-        tf_idf_vector = []
+        tf_idf_vector = {}
+        # Change tf_idf_vector from list to dictionary
 
         for word in unique_words:
             tf = files_words_list[i].count(word) / len(files_words_list[i])
             idf = idf_values[word]
-            tf_idf_vector.append(tf * idf)
+            tf_idf_vector[word] = tf * idf
+            # Store the TF-IDF values in a dictionary with words as keys
+
+        tf_idf_matrix.append(tf_idf_vector)
+
+    return tf_idf_matrix
+
+def calculate_tf_idf_matrix(directory_path):
+    files_words_list, unique_words = words_and_unique_words_in_directory(directory_path)
+    idf_values = inverse_document_frequency(files_words_list, unique_words)
+    tf_idf_matrix = []
+
+    for i in range(len(files_words_list)):
+        tf_idf_vector = {}
+        # Change tf_idf_vector from list to dictionary
+
+        for word in unique_words:
+            tf = files_words_list[i].count(word) / len(files_words_list[i])
+            idf = idf_values[word]
+            tf_idf_vector[word] = tf * idf
+            # Store the TF-IDF values in a dictionary with words as keys
+
+        tf_idf_matrix.append(tf_idf_vector)
+
+    return tf_idf_matrix
+
+def calculate_tf_idf_matrix(directory_path):
+    files_words_list, unique_words = words_and_unique_words_in_directory(directory_path)
+    idf_values = inverse_document_frequency(files_words_list, unique_words)
+    tf_idf_matrix = []
+
+    for i in range(len(files_words_list)):
+        tf_idf_vector = {}
+        # Change tf_idf_vector from list to dictionary
+
+        for word in unique_words:
+            tf = files_words_list[i].count(word) / len(files_words_list[i])
+            idf = idf_values[word]
+            tf_idf_vector[word] = tf * idf
+            # Store the TF-IDF values in a dictionary with words as keys
 
         tf_idf_matrix.append(tf_idf_vector)
 
@@ -95,9 +135,16 @@ def analyse_tf_idf(tf_idf_dict, option):
         analyse_tf_idf(tf_idf_dict, 6)
 
     if option == 1:
-        least_important_words = [word for document in tf_idf_dict for word, tf_idf_score in tf_idf_dict[document].items() if tf_idf_score < 0]
-        least_important_words = list(dict.fromkeys(least_important_words))
-        print("Least important words: ", least_important_words)
+        # Extract all words and their TF-IDF scores into a list of tuples
+        all_word_scores = [(word, tf_idf_score) for document in tf_idf_dict for word, tf_idf_score in document.items()]
+
+        # Sort the list based on TF-IDF scores in ascending order
+        sorted_word_scores = sorted(all_word_scores, key=lambda x: x[1])
+
+        # Print the 10 words with the smallest TF-IDF scores
+        print("10 words with the smallest TF-IDF scores:")
+        for word, tf_idf_score in sorted_word_scores[:10]:
+            print(f"{word}: {tf_idf_score}")
 
     elif option == 2:
         highest_tf_idf_score = max(tf_idf_score for document in tf_idf_dict for tf_idf_score in tf_idf_dict[document].values())
