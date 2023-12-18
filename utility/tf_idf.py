@@ -1,166 +1,121 @@
-
 """
 # Python project : My first chatBot.
 
 # pythonProject-pychatbot-DONNAT-LEMONT-int1
-# Teammates : DONNAT Arthur, LEMONT Mathis ; On (Discord and) GitHub.
+# Teammates : DONNAT Arthur, LEMONT Mathis ; On (Discord and) Github.
 
 
 # role of this file :
-# tf_idf.py : tf_idf matrix functions.
+# data.py : functions for process the date / .txt files.
 """
-
-import math
-import utility.data as data
 import os
-# import numpy as np
+import math
+from . import data
 
-
-def term_frequency(chaine:str)->dict:
-    """role : ,
-    In, parameters : ,
-    Out, returned result : ."""
-
-    """
-    fonction qui calcule la frequence d'apparition de chaque caractere dans une chaine de caracteres
-
-    parametres :
-    chaine (str) : La chaine de caracteres a analyser.
-
-    retourne :
-    frequency (dict) : Un dictionnaire associant a chaque caractere sa frequence d'apparition.
-    """
+def calculate_term_frequency(input_string: str) -> dict:
     frequency = {}
-    for i in range(len(chaine)):
-        if chaine[i] not in frequency:
-            frequency[chaine[i]] = 1
-        else:
-            frequency[chaine[i]] += 1
-
-    frequency = dict(sorted(frequency.items(), key=lambda item: item[0]))
+    for char in input_string:
+        frequency[char] = frequency.get(char, 0) + 1
     return frequency
 
+def words_and_unique_words_in_directory(directory_path):
+    files_words_list = []
+    unique_words = set()
 
-def inverse_document_frequency(directory: str) -> dict:
-    """role : ,
-    In, parameters : ,
-    Out, returned result : ."""
+    for filename in os.listdir(directory_path):
+        filepath = os.path.join(directory_path, filename)
 
-    """
-    ecrire une fonction qui prend en parametre le repertoire ou se trouve l’ensemble des fichiers du corpus et qui retourne un dictionnaire associant a chaque mot son score IDF.
+        with open(filepath, 'r', encoding='utf-8') as file:
+            file_content = file.read().split()
+            file_words = list(set(file_content))
 
-    parametres :
-    directory (str) : Le chemin du repertoire contenant les fichiers a analyser.
+            unique_words.update(file_words)
+            files_words_list.append(file_words)
 
-    retourne :
-    word_count (dict) : Un dictionnaire associant a chaque mot son score IDF. 
-    """
-    num_files = 0
-    word_counts = {}
+    return files_words_list, list(unique_words)
 
-    for filename in os.listdir(directory):
-        with open(os.path.join(directory, filename), 'r') as file:
-            num_files += 1
-            words = file.read().split()
-            word_counts = term_frequency(words)
+def inverse_document_frequency(files_words_list, unique_words):
+    word_counts = {word: 0 for word in unique_words}
+    for word in unique_words:
+        for file_words in files_words_list:
+            if word in file_words:
+                word_counts[word] += 1
 
-    for word in word_counts:
-        word_counts[word] = math.log(num_files / word_counts[word])
-
-    word_counts = dict(sorted(word_counts.items(), key=lambda item: item[0]))
+    for word, count in word_counts.items():
+        word_counts[word] = math.log10(len(files_words_list) / count) if count > 0 else 0
 
     return word_counts
 
-
-def tf_idf_matrix(directory: str) -> list:
-    """role : ,
-    In, parameters : ,
-    Out, returned result : ."""
-
-    """
-    ecrire une fonction qui prend en parametre le repertoire ou se trouve l’ensemble des fichiers du corpus et qui retourne une liste de listes representant la matrice TF-IDF.
-
-    parametres :
-    directory (str) : Le chemin du repertoire contenant les fichiers à analyser.
-
-    retourne :
-    tf_idf_matrix (list) : Une liste de listes représentant la matrice TF-IDF.
-    """
-    idf_scores = inverse_document_frequency(directory)
+def calculate_tf_idf_matrix(directory_path):
+    files_words_list, unique_words = words_and_unique_words_in_directory(directory_path)
+    idf_values = inverse_document_frequency(files_words_list, unique_words)
     tf_idf_matrix = []
-    tf_idf_dict = {}
 
-    for filename in os.listdir(directory):
-        with open(os.path.join(directory, filename), 'r') as file:
-            tf_scores = term_frequency(file.read().split())
-            tf_idf_scores = []
-            tf_idf_scores_dict = {}
-            for word in tf_scores:
-                try:
-                    #? Si le mot n'est pas unique on passe au suivant
-                    # if tf_scores[word] != 1:
-                    #     continue
-                    tf_idf_scores.append(tf_scores[word] * idf_scores[word])
-                    tf_idf_scores_dict[word] = tf_scores[word] * idf_scores[word]
-                except:
-                    pass
-            tf_idf_matrix.append(tf_idf_scores)
-            tf_idf_dict[filename] = tf_idf_scores_dict
+    for file_words in files_words_list:
+        tf_idf_vector = {}
+        for word in unique_words:
+            tf = file_words.count(word) / len(file_words)
+            idf = idf_values[word]
+            tf_idf_vector[word] = tf * idf
 
-    return tf_idf_matrix, tf_idf_dict
+        tf_idf_matrix.append(tf_idf_vector)
 
+    return tf_idf_matrix
 
-def analyse_tf_idf(tf_idf_dict, option):
-    """role : ,
-    In, parameters : ,
-    Out, returned result : ."""
-
-    """
-    implemented features.
-    In : -tf_idf_dict : ...  ; -option : number (1 to 6) of a feature to run.
-    """
-    if option == 'all':
-        _, tf_idf_dict = tf_idf_matrix("./cleaned")
-        analyse_tf_idf(tf_idf_dict, 1)
-        analyse_tf_idf(tf_idf_dict, 2)
-        analyse_tf_idf(tf_idf_dict, 3)
-        analyse_tf_idf(tf_idf_dict, 4)
-        analyse_tf_idf(tf_idf_dict, 5)
-        analyse_tf_idf(tf_idf_dict, 6)
+def analyse_tf_idf(tf_idf_matrix, option):
 
     if option == 1:
-        # 1. Afficher la liste des mots les moins importants dans le corpus de documents.
-        least_important_words = [word for document in tf_idf_dict for word, tf_idf_score in tf_idf_dict[document].items() if tf_idf_score < 0]
-        # enleve si ya des doublons
-        least_important_words = list(dict.fromkeys(least_important_words))
-        print("Mots les moins importants : ", least_important_words)
+        all_word_scores = [(word, tf_idf_score) for document in tf_idf_matrix for word, tf_idf_score in document.items()]
+
+        # Sort the list based on TF-IDF scores in ascending order
+        sorted_word_scores = sorted(all_word_scores, key=lambda x: x[1])
+
+        # Print the 10 words with the smallest TF-IDF scores
+        print("10 words with the smallest TF-IDF scores:")
+        for word, tf_idf_score in sorted_word_scores[:10]:
+            print(f"{word}: {tf_idf_score}")
 
     elif option == 2:
-        # 2. Afficher le(s) mot(s) ayant le score TD-IDF le plus eleve
-        highest_tf_idf_score = max(tf_idf_score for document in tf_idf_dict for tf_idf_score in tf_idf_dict[document].values())
-        highest_tf_idf_words = [word for document in tf_idf_dict for word, tf_idf_score in tf_idf_dict[document].items() if tf_idf_score == highest_tf_idf_score]
-        print("Mots avec le score TF-IDF le plus eleve : ", highest_tf_idf_words)
+        highest_tf_idf_score = max(tf_idf_score for document in tf_idf_matrix for tf_idf_score in document.values())
+        highest_tf_idf_word = max((word for document in tf_idf_matrix for word, tf_idf_score in document.items() if tf_idf_score == highest_tf_idf_score))
+        print("Word with the highest TF-IDF score: ", highest_tf_idf_word)
+
 
     elif option == 3:
-        # 3. Indiquer le(s) mot(s) le(s) plus repete(s) par le president Chirac
-        chirac_documents = [document for document in tf_idf_dict if "Chirac" in document]
-        chirac_most_repeated_words = [max(tf_idf_dict[document], key=tf_idf_dict[document].get) for document in chirac_documents]
-        print("Mots les plus repetes par le president Chirac : ", chirac_most_repeated_words)
+        all_words = [word for document in tf_idf_matrix for word, _ in document.items()]
+
+        # Modified function for question 3
+        word_counts = {}
+        for word in all_words:
+            word_counts[word] = word_counts.get(word, 0) + 1
+
+        most_repeated_words = sorted(word_counts.items(), key=lambda x: x[1], reverse=True)[:5]
+        print("5 most repeated words: ", most_repeated_words)
 
     elif option == 4:
-        # 4. Indiquer le(s) nom(s) du (des) president(s) qui a (ont) parle de la « Nation » et celui qui l’a repete le plus de fois
-        presidents_mentioned_nation = [data.get_president_name(document) for document in tf_idf_dict if 'Nation' in tf_idf_dict[document]]
-        print("Presidents qui ont parle de la Nation : ", presidents_mentioned_nation)
+        file_names = data.list_of_files("./speeches", "txt")
+        if file_names:
+            occurrences_per_president = [(data.get_president_name(file_name), file_name.count("nation")) for file_name in file_names]
+            occurrences_per_president.sort(key=lambda x: x[1], reverse=True)
+
+            if occurrences_per_president:
+                first_occurrence = occurrences_per_president[0][0]
+                most_occurrences = occurrences_per_president[0][0]
+                print("First president who mentioned 'nation':", first_occurrence)
+                print("President who mentioned 'nation' the most times:", most_occurrences)
+            else:
+                print("No occurrences of 'nation' found in any file.")
+        else:
+            print("No files found in the 'speeches' directory.")
 
     elif option == 5:
-        # 5. Indiquer le premier president a parler du climat et/ou de l’ecologie
-        first_president_to_mention_climate = next((data.get_president_name(document) for document in tf_idf_dict if 'climat' in tf_idf_dict[document] or 'écologie' in tf_idf_dict[document]), None)
-        print("Premier president a parler du climat ou de l'ecologie : ", first_president_to_mention_climate)
+        first_president_to_mention_climate = get_first_president_to_mention_climate(tf_idf_matrix)
+        print("First president to mention climate or ecology:", first_president_to_mention_climate)
 
     elif option == 6:
-        # 6. Hormis les mots dits « non importants », quel(s) est(sont) le(s) mot(s) que tous les presidents ont evoques.
-        words_mentioned_by_all_presidents = [word for word in tf_idf_dict[next(iter(tf_idf_dict))] if all(word in tf_idf_dict[document] for document in tf_idf_dict) and any(tf_idf_dict[document][word] != 0 for document in tf_idf_dict)]
-        print("Mots evoques par tous les presidents : ", words_mentioned_by_all_presidents)
+        words_mentioned_by_all_presidents = get_words_mentioned_by_all_presidents(tf_idf_matrix)
+        print("Words mentioned by all presidents:", words_mentioned_by_all_presidents)
+    
 
     else:
         print("This feature doesn't exist.")
