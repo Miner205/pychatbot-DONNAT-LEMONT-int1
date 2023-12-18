@@ -72,7 +72,7 @@ def words_and_unique_words_in_directory(directory_path):
 
 
 
-def inverse_document_frequency():
+def inverse_document_frequency(files_words_list, unique_words):
     word_counts = {}
     for i in range (len(unique_words)):
         files_with_word = 0
@@ -84,6 +84,7 @@ def inverse_document_frequency():
         word_counts[unique_words[i]] = math.log10(len(files_words_list) / files_with_word)
 
     word_counts = dict(sorted(word_counts.items(), key=lambda item: item[0]))
+    return word_counts
 
 
 
