@@ -20,7 +20,7 @@ def menu():
     """role : affiche le menu de toutes les features / actions possibles. (display with format),
     In, parameters : none,
     Out, returned result : none (il n'y a rien a retourné ; car il n'y a que des affichages à faire)."""
-    print("Choose a feature between : ")
+    print("| {:<120} |".format("Choose a feature between : "))
     features = ["0 : Stop the program.",
                 "1 : Display the list of least important words in the document corpus.",
                 "2 : Display the word(s) with the highest TD-IDF score.",

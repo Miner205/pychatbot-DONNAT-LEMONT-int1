@@ -16,7 +16,8 @@ LEMONT Mathis
 
 # !! TO READ !! : Instructions for use,
 -Open the file "pythonProject-pychatbot-DONNAT-LEMONT-int1" with a python code editor (like pycharm).
--run main.py . The program should start (and display the menu).
+-run main.py . The program should start and display the menu ;
+now just enter the number corresponding to your chosen option.
 
 # Any dependencies to be installed,
 
@@ -34,4 +35,5 @@ None.
 °
 
 °
-
+# To do :
+Part II functions : processing a question . generate an answer
