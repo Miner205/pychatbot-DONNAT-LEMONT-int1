@@ -14,9 +14,9 @@ import os
 
 
 def list_of_files(directory, extension):
-    """role : ,
-    In, parameters : ,
-    Out, returned result : ."""
+    """role : get the files name in the directory and of the type extension choose ,
+    In, parameters : a directory and an extension (like .txt) ,
+    Out, returned result : list of files names."""
     files_names = []
     for filename in os.listdir(directory):
         if filename.endswith(extension):
@@ -25,9 +25,9 @@ def list_of_files(directory, extension):
 
 
 def get_president_name(file):
-    """role : ,
-    In, parameters : ,
-    Out, returned result : ."""
+    """role : get president names from the files name,
+    In, parameters : list of files names,
+    Out, returned result : . list of presidents names."""
     name = file[11:-4]
 
     if '0' <= name[-1] <= '9':
@@ -41,16 +41,16 @@ president_surname = {'Chirac': "Jacques", "Giscard d'Estaing": "Valérie", 'Holl
 
 
 def get_president_surname(name):
-    """role : ,
-    In, parameters : ,
-    Out, returned result : ."""
+    """role : get president surname,
+    In, parameters : a president name.,
+    Out, returned result : the president surname."""
     return president_surname[name]
 
 
 def print_president_list():
-    """role : ,
-    In, parameters : ,
-    Out, returned result : ."""
+    """role : print the list of presidents names,
+    In, parameters : none,
+    Out, returned result : none. (because it's a print) """
     last = ""
     files_names = list_of_files("./speeches", "txt")
     for file_name in files_names:

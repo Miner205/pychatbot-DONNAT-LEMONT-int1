@@ -12,21 +12,19 @@ import os
 import math
 from . import data
 
-
 def calculate_term_frequency(input_string: str) -> dict:
-    """role : ,
-        In, parameters : ,
-        Out, returned result : ."""
+    """Role: Calculate the term frequency for each character in the input string.
+    In, parameters: input_string - a string.
+    Out, returned result: A dictionary containing the frequency of each character."""
     frequency = {}
     for char in input_string:
         frequency[char] = frequency.get(char, 0) + 1
     return frequency
 
-
 def words_and_unique_words_in_directory(directory_path):
-    """role : ,
-        In, parameters : ,
-        Out, returned result : ."""
+    """Role: Retrieve the list of words for each file in the given directory and unique words across all files.
+    In, parameters: directory_path - the path to the directory containing files.
+    Out, returned result: A tuple containing a list of words for each file and a list of unique words."""
     files_words_list = []
     unique_words = set()
 
@@ -42,11 +40,10 @@ def words_and_unique_words_in_directory(directory_path):
 
     return files_words_list, list(unique_words)
 
-
 def inverse_document_frequency(files_words_list, unique_words):
-    """role : ,
-        In, parameters : ,
-        Out, returned result : ."""
+    """Role: Calculate the inverse document frequency for unique words.
+    In, parameters: files_words_list - a list of words for each file, unique_words - a list of unique words.
+    Out, returned result: A dictionary containing the inverse document frequency values for each unique word."""
     word_counts = {word: 0 for word in unique_words}
     for word in unique_words:
         for file_words in files_words_list:
@@ -58,11 +55,10 @@ def inverse_document_frequency(files_words_list, unique_words):
 
     return word_counts
 
-
 def calculate_tf_idf_matrix(directory_path):
-    """role : ,
-    In, parameters : ,
-    Out, returned result : ."""
+    """Role: Calculate the TF-IDF matrix for files in the given directory.
+    In, parameters: directory_path - the path to the directory containing files.
+    Out, returned result: A matrix containing TF-IDF values for each word in each file."""
     files_words_list, unique_words = words_and_unique_words_in_directory(directory_path)
     idf_values = inverse_document_frequency(files_words_list, unique_words)
     tf_idf_matrix = []
@@ -78,11 +74,10 @@ def calculate_tf_idf_matrix(directory_path):
 
     return tf_idf_matrix
 
-
 def presidents_mentioned_climate(tf_idf_matrix):
-    """role : ,
-        In, parameters : ,
-        Out, returned result : ."""
+    """Role: Identify the first and most mentioned president regarding climate or ecology.
+    In, parameters: tf_idf_matrix - a matrix containing TF-IDF values for each word in each file.
+    Out, returned result: A tuple containing the first president who mentioned it and the president who mentioned it the most."""
     occurrences_by_president = {}
 
     files_names = data.list_of_files("./speeches", "txt")
@@ -104,13 +99,10 @@ def presidents_mentioned_climate(tf_idf_matrix):
 
     return first_occurrence_president, most_occurrences_president
 
-
 def words_mentioned_by_all_presidents(tf_idf_matrix):
-    """
-    role : Trouver les mots mentionnés par tous les présidents,
-    In, parameters : matrice tf-idf,
-    Out, returned result : les mots mentionnés par tous les présidents.
-    """
+    """Role: Identify the words mentioned by all presidents.
+    In, parameters: tf_idf_matrix - a matrix containing TF-IDF values for each word in each file.
+    Out, returned result: A list of words mentioned by all presidents."""
     words_mentioned_by_all = set(tf_idf_matrix[0].keys())
 
     for president_tf_idf in tf_idf_matrix[1:]:
@@ -118,13 +110,11 @@ def words_mentioned_by_all_presidents(tf_idf_matrix):
 
     result = list(words_mentioned_by_all)
     return result
-
-
+    
 def analyse_tf_idf(tf_idf_matrix, option):
-    """role : ,
-        In, parameters : ,
-        Out, returned result : ."""
-
+    """Role: Analyze the TF-IDF matrix based on the chosen option.
+    In, parameters: tf_idf_matrix - a matrix containing TF-IDF values for each word in each file, option - an integer representing the chosen analysis option.
+    Out, returned result: Print the analysis results based on the chosen option."""
     if option == 1:
         all_word_scores = [(word, tf_idf_score) for document in tf_idf_matrix for word, tf_idf_score in document.items()]
 
@@ -180,6 +170,5 @@ def analyse_tf_idf(tf_idf_matrix, option):
     elif option == 6:
         words_mentioned_by_all_presidents_result = words_mentioned_by_all_presidents(tf_idf_matrix)
         print(f"Words mentioned by all presidents: {words_mentioned_by_all_presidents_result}")
-
     else:
         print("This feature doesn't exist.")
