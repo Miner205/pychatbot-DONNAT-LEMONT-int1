@@ -14,12 +14,12 @@ import utility.data as data
 import utility.tf_idf as tf_idf
 
 
-def generate(vector, relevant_doc):
+def generate(question_vector, name_relevant_doc):
     """role : ,
-    In, parameters : vector is the tf-idf vector of the question,
-    relevant_doc is the relevant document (returned from ... function),
+    In, parameters : question_vector is the tf-idf vector of the question,
+    name_relevant_doc is the name (in cleaned) of the relevant document (returned from ... function),
     Out, returned result : answer."""
-    word = highest_tf_idf(vector)
+    word = highest_tf_idf(question_vector)
 
 
 def highest_tf_idf(vector):   # à mettre dans tf_idf.py?

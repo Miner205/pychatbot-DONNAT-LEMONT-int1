@@ -33,9 +33,5 @@ None.
 # List of known bugs,
 °
 
-°Ces 2 fonctionnalités qui ne retourne rien :
--Presidents qui ont parle de la Nation. 
--Premier president a parler du climat ou de l'ecologie.
-
 °
 
