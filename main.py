@@ -35,7 +35,9 @@ def menu():
     while x != 0:
         for feature in features:
             print("| {:^120} |".format(feature))
-        x = int(input("Enter the number of the chosen feature : "))
+        x = input("Enter the number of the chosen feature : ")
+        if '0' <= x <= '9':
+            x = int(x)
         if x != 0:
             tf_idf_dict = tf_idf_matrix  # Assign tf_idf_matrix directly to tf_idf_dict
             tf_idf.analyse_tf_idf(tf_idf_dict, x)

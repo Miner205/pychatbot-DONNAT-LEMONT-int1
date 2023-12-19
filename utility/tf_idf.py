@@ -134,7 +134,6 @@ def analyse_tf_idf(tf_idf_matrix, option):
     elif option == 6:
         words_mentioned_by_all_presidents = get_words_mentioned_by_all_presidents(tf_idf_matrix)
         print("Words mentioned by all presidents:", words_mentioned_by_all_presidents)
-    
 
     else:
         print("This feature doesn't exist.")
