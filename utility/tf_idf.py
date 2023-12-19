@@ -10,13 +10,10 @@
 """
 import os
 import math
-import utility.data as data
+from . import data
 
 
 def calculate_term_frequency(input_string: str) -> dict:
-    """role : ,
-    In, parameters : ,
-    Out, returned result : ."""
     frequency = {}
     for char in input_string:
         frequency[char] = frequency.get(char, 0) + 1
@@ -24,9 +21,6 @@ def calculate_term_frequency(input_string: str) -> dict:
 
 
 def words_and_unique_words_in_directory(directory_path):
-    """role : ,
-    In, parameters : ,
-    Out, returned result : ."""
     files_words_list = []
     unique_words = set()
 
@@ -44,9 +38,6 @@ def words_and_unique_words_in_directory(directory_path):
 
 
 def inverse_document_frequency(files_words_list, unique_words):
-    """role : ,
-    In, parameters : ,
-    Out, returned result : ."""
     word_counts = {word: 0 for word in unique_words}
     for word in unique_words:
         for file_words in files_words_list:
@@ -60,9 +51,6 @@ def inverse_document_frequency(files_words_list, unique_words):
 
 
 def calculate_tf_idf_matrix(directory_path):
-    """role : ,
-    In, parameters : ,
-    Out, returned result : ."""
     files_words_list, unique_words = words_and_unique_words_in_directory(directory_path)
     idf_values = inverse_document_frequency(files_words_list, unique_words)
     tf_idf_matrix = []
@@ -79,10 +67,39 @@ def calculate_tf_idf_matrix(directory_path):
     return tf_idf_matrix
 
 
+def presidents_mentioned_climate(tf_idf_matrix):
+    occurrences_by_president = {}
+
+    files_names = data.list_of_files("./speeches", "txt")
+
+    for i, document in enumerate(tf_idf_matrix):
+        if i < len(files_names):  # Check if the index is within the bounds of the list
+            president_name = data.get_president_name(files_names[i])
+            # Counting occurrences of "climate" and "ecology" in the document
+            occurrences_by_president[president_name] = document.get("climate", 0) + document.get("ecology", 0)
+
+    if not occurrences_by_president:
+        return None, None
+
+    # Find the president who mentioned it first
+    first_occurrence_president = min(occurrences_by_president, key=occurrences_by_president.get)
+    
+    # Find the president who mentioned it the most
+    most_occurrences_president = max(occurrences_by_president, key=occurrences_by_president.get)
+
+    return first_occurrence_president, most_occurrences_president
+
+
+def words_mentioned_by_all_presidents(tf_idf_matrix):
+    common_words = set(tf_idf_matrix[0].keys())
+
+    for document in tf_idf_matrix[1:]:
+        common_words &= set(document.keys())
+
+    return list(common_words)
+
+
 def analyse_tf_idf(tf_idf_matrix, option):
-    """role : ,
-    In, parameters : ,
-    Out, returned result : ."""
 
     if option == 1:
         all_word_scores = [(word, tf_idf_score) for document in tf_idf_matrix for word, tf_idf_score in document.items()]
@@ -128,9 +145,13 @@ def analyse_tf_idf(tf_idf_matrix, option):
             print("No files found in the 'speeches' directory.")
 
     elif option == 5:
-        first_president_to_mention_climate = get_first_president_to_mention_climate(tf_idf_matrix)
-        print("First president to mention climate or ecology:", first_president_to_mention_climate)
-
+        first_occurrence, most_occurrences_president = presidents_mentioned_climate(tf_idf_matrix)
+        
+        if first_occurrence:
+            print("First president to mention climate or ecology:", first_occurrence)
+            print("President who mentioned it the most:", most_occurrences_president)
+        else:
+            print("No presidents mentioned climate or ecology.")
     elif option == 6:
         words_mentioned_by_all_presidents = get_words_mentioned_by_all_presidents(tf_idf_matrix)
         print("Words mentioned by all presidents:", words_mentioned_by_all_presidents)
