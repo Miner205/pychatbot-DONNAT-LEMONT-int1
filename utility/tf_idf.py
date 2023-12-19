@@ -14,6 +14,9 @@ from . import data
 
 
 def calculate_term_frequency(input_string: str) -> dict:
+    """role : ,
+        In, parameters : ,
+        Out, returned result : ."""
     frequency = {}
     for char in input_string:
         frequency[char] = frequency.get(char, 0) + 1
@@ -21,6 +24,9 @@ def calculate_term_frequency(input_string: str) -> dict:
 
 
 def words_and_unique_words_in_directory(directory_path):
+    """role : ,
+        In, parameters : ,
+        Out, returned result : ."""
     files_words_list = []
     unique_words = set()
 
@@ -38,6 +44,9 @@ def words_and_unique_words_in_directory(directory_path):
 
 
 def inverse_document_frequency(files_words_list, unique_words):
+    """role : ,
+        In, parameters : ,
+        Out, returned result : ."""
     word_counts = {word: 0 for word in unique_words}
     for word in unique_words:
         for file_words in files_words_list:
@@ -51,6 +60,9 @@ def inverse_document_frequency(files_words_list, unique_words):
 
 
 def calculate_tf_idf_matrix(directory_path):
+    """role : ,
+    In, parameters : ,
+    Out, returned result : ."""
     files_words_list, unique_words = words_and_unique_words_in_directory(directory_path)
     idf_values = inverse_document_frequency(files_words_list, unique_words)
     tf_idf_matrix = []
@@ -68,6 +80,9 @@ def calculate_tf_idf_matrix(directory_path):
 
 
 def presidents_mentioned_climate(tf_idf_matrix):
+    """role : ,
+        In, parameters : ,
+        Out, returned result : ."""
     occurrences_by_president = {}
 
     files_names = data.list_of_files("./speeches", "txt")
@@ -91,15 +106,24 @@ def presidents_mentioned_climate(tf_idf_matrix):
 
 
 def words_mentioned_by_all_presidents(tf_idf_matrix):
-    common_words = set(tf_idf_matrix[0].keys())
+    """
+    role : Trouver les mots mentionnés par tous les présidents,
+    In, parameters : matrice tf-idf,
+    Out, returned result : les mots mentionnés par tous les présidents.
+    """
+    words_mentioned_by_all = set(tf_idf_matrix[0].keys())
 
-    for document in tf_idf_matrix[1:]:
-        common_words &= set(document.keys())
+    for president_tf_idf in tf_idf_matrix[1:]:
+        words_mentioned_by_all.intersection_update(president_tf_idf.keys())
 
-    return list(common_words)
+    result = list(words_mentioned_by_all)
+    return result
 
 
 def analyse_tf_idf(tf_idf_matrix, option):
+    """role : ,
+        In, parameters : ,
+        Out, returned result : ."""
 
     if option == 1:
         all_word_scores = [(word, tf_idf_score) for document in tf_idf_matrix for word, tf_idf_score in document.items()]
@@ -152,9 +176,10 @@ def analyse_tf_idf(tf_idf_matrix, option):
             print("President who mentioned it the most:", most_occurrences_president)
         else:
             print("No presidents mentioned climate or ecology.")
+
     elif option == 6:
-        words_mentioned_by_all_presidents = get_words_mentioned_by_all_presidents(tf_idf_matrix)
-        print("Words mentioned by all presidents:", words_mentioned_by_all_presidents)
+        words_mentioned_by_all_presidents_result = words_mentioned_by_all_presidents(tf_idf_matrix)
+        print(f"Words mentioned by all presidents: {words_mentioned_by_all_presidents_result}")
 
     else:
         print("This feature doesn't exist.")
